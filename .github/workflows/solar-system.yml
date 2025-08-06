@@ -12,18 +12,16 @@ env:
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
     
 jobs:
-    unit-testing:
+    unit-testing: 
         name: Unit Testing
         services:
           mongo-db:
             image: siddharth67/mongo-db:non-prod
             ports:
-              - 27017:27017
-            credentials:
-              username: non-prod-user
-              password: non-prod-password
+              - 27017:27017 
+        
         env:
-          MONGO_URI: 'mongodb//localhost:27017/superData'
+          MONGO_URI: 'mongodb://localhost:27017/superData'
           MONGO_USERNAME: non-prod-user
           MONGO_PASSWORD: non-prod-password
         strategy:
