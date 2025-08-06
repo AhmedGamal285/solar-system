@@ -14,6 +14,18 @@ env:
 jobs:
     unit-testing:
         name: Unit Testing
+        services:
+          mongo-db:
+            image: siddharth67/mongo-db:non-prod
+            ports:
+              - 27017:27017
+            credentials:
+              username: non-prod-user
+              password: non-prod-password
+        env:
+          MONGO_URI: 'mongodb//localhost:27017/superData'
+          MONGO_USERNAME: non-prod-user
+          MONGO_PASSWORD: non-prod-password
         strategy:
           matrix:
             os: [ubuntu-22.04, ubuntu-latest]
