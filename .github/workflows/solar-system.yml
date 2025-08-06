@@ -68,7 +68,7 @@ jobs:
           mongo-db:
             image: siddharth67/mongo-db:non-prod
             options: 
-              -- name mongo
+              --dname mongo
             # ports:
             #   - 27017:27017
         runs-on: ubuntu-latest
