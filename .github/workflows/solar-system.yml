@@ -63,7 +63,7 @@ jobs:
     code-coverage:
         name: Code Coverage
         container:
-          image: node:20
+          image: node:18
         services:
           mongo-db:
             image: siddharth67/mongo-db:non-prod
@@ -85,7 +85,7 @@ jobs:
         #     node-version: 20
         
         - name: Get npm cache directory
-          id: npm-cache-dir
+          id: npm-cache-dir 
           shell: pwsh
           run: echo "dir=$(npm config get cache)" >> ${env:GITHUB_OUTPUT}
 
