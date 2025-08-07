@@ -6,9 +6,6 @@ on:
     branches:
       - main
       - 'feature/*'
-permissions: 
-  packages: write
-  contents: read
 env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
@@ -62,7 +59,7 @@ jobs:
     code-coverage:
         name: Code Coverage
         container:
-          image: node:18
+          image: node:20
         services:
           mongo-db:
             image: siddharth67/mongo-db:non-prod
@@ -105,6 +102,8 @@ jobs:
             retention-days: 5
     Containerization:
         runs-on: ubuntu-latest
+        permissions: 
+          packages: write
         needs: [code-coverage, unit-testing]
         steps:
           - name: Login to GitHub Container Registry
