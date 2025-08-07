@@ -104,11 +104,12 @@ jobs:
         runs-on: ubuntu-latest
         permissions: 
           packages: write
+          contents: read
         needs: [code-coverage, unit-testing]
         steps:
           - name: Checkout Repository
             uses: actions/checkout@v4
-            
+
           - name: Login to GitHub Container Registry
             uses: docker/login-action@v3
             with:
