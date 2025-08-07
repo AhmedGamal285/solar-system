@@ -6,6 +6,8 @@ on:
     branches:
       - main
       - 'feature/*'
+permissions: 
+  packages: write
 env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
@@ -116,4 +118,4 @@ jobs:
             with:
               context: .
               push: true
-              tags: ghcr.io/ahmedgamal285/solar-system:{githubSHA}
+              tags: ghcr.io/ahmedgamal285/solar-system:${{ github.sha }}
