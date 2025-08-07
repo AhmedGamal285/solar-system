@@ -8,6 +8,7 @@ on:
       - 'feature/*'
 permissions: 
   packages: write
+  contents: read
 env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
