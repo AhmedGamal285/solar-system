@@ -122,4 +122,26 @@ jobs:
             with:
               context: .
               push: true
-              tags: ghcr.io/ahmedgamal285/solar-system:${{ github.sha }}
+              tags: ghcr.io/ahmedgamal285/solar-system:${{ github.sha }}       
+    deploy-dev:
+          name: Deploying to Development 
+          runs-on: ubuntu-latest
+          needs: [Containerization]
+          steps:
+            - name: Checkout Repository
+              uses: actions/checkout@v4
+            
+            - uses: azure/setup-kubectl@v4
+              with:
+                version: 'v1.32' # default is latest stable
+              name: Install Kubectl Tool
+            
+            - name: Kind Cluster
+              uses: helm/kind-action@v1.12.0
+            
+            - name: Fetch Kubernetes Cluster Details
+              run: |
+                kubectl version --short
+                echo ----------------------------------------------------
+                kubectl get nodes
+
