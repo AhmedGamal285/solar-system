@@ -131,10 +131,8 @@ jobs:
             - name: Checkout Repository
               uses: actions/checkout@v4
             
-            - uses: azure/setup-kubectl@v4
-              with:
-                version: 'v1.32' # default is latest stable
-              name: Install Kubectl Tool
+            - name: Kubectl tool installer
+              uses: Azure/setup-kubectl@v4.0.1
             
             - name: Kind Cluster
               uses: helm/kind-action@v1.12.0
