@@ -170,7 +170,7 @@ jobs:
                 
             - name: Create namespace if not exists
               run: |
-                kubectl create namespace ${{ env.NAMESPACE }} || true
+                kubectl create namespace ${{ vars.NAMESPACE }} || true
 
             - name: Create mongo-db-creds secret
               run: |
