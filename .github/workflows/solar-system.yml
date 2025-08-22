@@ -10,6 +10,7 @@ env:
   MONGO_URI: 'mongodb+srv://supercluster.d83jj.mongodb.net/superData'
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+  NAMESPACE: ${{ vars.NAMESPACE }}
     
 jobs:
     unit-testing: 
@@ -170,7 +171,7 @@ jobs:
             
             - name: Create MongoDB Secret
               run: |
-                kubectl create  -n ${{ vars.NAMESPACE }} secret generic mongo-db-creds \
+                kubectl create  -n ${{ env.NAMESPACE }} secret generic mongo-db-creds \
                 --from-literal=MONGO_URI=${{ env.MONGO_URI}} \
                 --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME}} \
                 --from-literal=MONGO_PASSWORD=${{ env.MONGO_PASSWORD}} \
