@@ -168,14 +168,19 @@ jobs:
             - name: Check files
               run: |
                 cat kubernetes/development/*.yaml
-            
-            - name: Create MongoDB Secret
+                
+            - name: Create namespace if not exists
               run: |
-                kubectl create  -n ${{ env.NAMESPACE }} secret generic mongo-db-creds \
-                --from-literal=MONGO_URI=${{ env.MONGO_URI }} \
-                --from-literal=MONGO_USERNAME=${{ env.MONGO_USERNAME }} \
-                --from-literal=MONGO_PASSWORD=${{ env.MONGO_PASSWORD }} \
-                --save-config
+                kubectl create namespace ${{ env.NAMESPACE }} || true
+
+            - name: Create mongo-db-creds secret
+              run: |
+                kubectl create secret generic mongo-db-creds \
+                  -n ${{ env.NAMESPACE }} \
+                  --from-literal=MONGO_URI="${{ env.MONGO_URI }}" \
+                  --from-literal=MONGO_USERNAME="${{ env.MONGO_USERNAME }}" \
+                  --from-literal=MONGO_PASSWORD="${{ env.MONGO_PASSWORD }}" \
+                  --save-config --dry-run=client -o yaml | kubectl apply -f -
             
             - name: Deploy to Dev Env.
               run: |
