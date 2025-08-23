@@ -206,7 +206,7 @@ jobs:
               run: |
                 kubectl wait --namespace ${{ vars.NAMESPACE }} \
                   --for=condition=Ready pod \
-                  --selector=app: solar-system \
+                  --selector=app=solar-system \
                   --timeout=180s
             
             - name: Test using Curl & JQ
