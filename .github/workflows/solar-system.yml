@@ -201,6 +201,12 @@ jobs:
               run: |
                 echo "APP_INGRESS_HOST=$(kubectl get ingress -n ${{ vars.NAMESPACE }} -o jsonpath='{.items[0].spec.rules[0].host}')" >> "$GITHUB_OUTPUT"
                 kubectl get ingress -n ${{ vars.NAMESPACE }} -o jsonpath='{.items[0].spec.rules[0].host}'
+            
+            - name: Test using Curl & JQ
+              run: |
+                echo "-------------------------------------"
+                curl http://localhost:30001/live -s -k | jq -r .status | grep -i live
+
     integration-test:
       name: Dev Integration Testing
       needs: deploy-dev
@@ -212,5 +218,5 @@ jobs:
           run: |
             echo $URL
             echo "-------------------------------------"
-            curl http://$URL/live -s -k | jq -r .status | grep -i live   
+            # curl http://$URL/live -s -k | jq -r .status | grep -i live   
             
