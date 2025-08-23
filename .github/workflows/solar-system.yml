@@ -210,6 +210,13 @@ jobs:
               run: |
                 kubectl apply -f kubernetes/development
             
+            - name: Debug pods
+              run: |
+                sleep 30
+                kubectl get pods -n development -o wide
+                kubectl describe pod -n development solar-system-75bdbdc5fb-f8l7n
+                kubectl logs -n development -l app=solar-system --tail=100 || true
+            
             - name: Set App Ingress Host URL
               id: set-ingress-host-address
               run: |
