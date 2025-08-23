@@ -236,8 +236,9 @@ jobs:
               run: |
                 kubectl get svc -n ${{ vars.NAMESPACE }}
                 echo "-------------------------------------"
-                kubectl run tmp-curl --rm --restart=Never --image=curlimages/curl:8.8.0 -- \
+                kubectl run tmp-curl -n ${{ vars.NAMESPACE }} --restart=Never --image=curlimages/curl:8.8.0 -- \
                 sh -c "curl -s -k http://solar-system/live | jq -r .status | grep -i live"
+                kubectl delete pod tmp-curl -n ${{ vars.NAMESPACE }}
 
     integration-test:
       name: Dev Integration Testing
