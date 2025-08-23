@@ -147,9 +147,17 @@ jobs:
             - name: Install ingress-nginx via manifest
               run: |
                 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+            
+            - name: Wait for ingress-nginx to be ready
+              run: |
+                kubectl wait --namespace ingress-nginx \
+                  --for=condition=Ready pod \
+                  --selector=app.kubernetes.io/component=controller \
+                  --timeout=180s
 
             - name: Save Nginx Controller IP as Github Variable
               run: |
+                kubectl get pod -n ingress-nginx
                 kubectl get svc -n ingress-nginx
             #     echo "INGRESS_IP=$(kubectl -n ingress-nginx get services ingress-nginx-controller -o jsonpath="{.status.loadBalancer.ingress[0].ip}")" >> "$GITHUB_ENV"
             
