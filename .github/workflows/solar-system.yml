@@ -202,6 +202,13 @@ jobs:
                 echo "APP_INGRESS_HOST=$(kubectl get ingress -n ${{ vars.NAMESPACE }} -o jsonpath='{.items[0].spec.rules[0].host}')" >> "$GITHUB_OUTPUT"
                 kubectl get ingress -n ${{ vars.NAMESPACE }} -o jsonpath='{.items[0].spec.rules[0].host}'
             
+            - name: Wait for Application to be ready
+              run: |
+                kubectl wait --namespace ${{ vars.NAMESPACE }} \
+                  --for=condition=Ready pod \
+                  --selector=app: solar-system \
+                  --timeout=180s
+            
             - name: Test using Curl & JQ
               run: |
                 kubectl get svc -n ${{ vars.NAMESPACE }}
