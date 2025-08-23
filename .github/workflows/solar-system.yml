@@ -200,6 +200,7 @@ jobs:
               id: set-ingress-host-address
               run: |
                 echo "APP_INGRESS_HOST=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> "$GITHUB_OUTPUT"
+                kubectl get ingress -n ${{ vars.NAMESPACE }} -o yaml
     integration-test:
       name: Dev Integration Testing
       needs: deploy-dev
