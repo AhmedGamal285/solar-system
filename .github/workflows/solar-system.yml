@@ -237,7 +237,7 @@ jobs:
                 kubectl get svc -n ${{ vars.NAMESPACE }}
                 echo "-------------------------------------"
                 kubectl run tmp-curl -n ${{ vars.NAMESPACE }} --restart=Never --rm --image=curlimages/curl:8.8.0 -- \
-                curl -s -k http://solar-system/live | jq -r .status | grep -i live"
+                curl -s -k http://solar-system/live | jq -r .status | grep -i live
     dev-integration-test:
       name: Dev Integration Testing
       needs: deploy-dev
@@ -358,7 +358,7 @@ jobs:
                   kubectl get svc -n ${{ vars.NAMESPACE }}
                   echo "-------------------------------------"
                   kubectl run tmp-curl -n ${{ vars.NAMESPACE }} --restart=Never --rm --image=curlimages/curl:8.8.0 -- \
-                  curl -s -k http://solar-system/live | jq -r .status | grep -i live"
+                  curl -s -k http://solar-system/live | jq -r .status | grep -i live
     prod-integration-test:
         name: Prod Integration Testing
         needs: deploy-prod
