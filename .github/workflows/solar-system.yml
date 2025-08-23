@@ -125,7 +125,9 @@ jobs:
               push: true
               tags: ghcr.io/ahmedgamal285/solar-system:${{ github.sha }}       
     deploy-dev:
-          name: Deploying to Development 
+          name: Deploying to Development
+          outputs:
+            APP_INGRESS_URL: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
           runs-on: ubuntu-latest
           needs: [Containerization]
           steps:
@@ -194,8 +196,20 @@ jobs:
               run: |
                 kubectl apply -f kubernetes/development
             
-            - name: Check all resources
+            - name: Set App Ingress Host URL
+              id: set-ingress-host-address
               run: |
-                kubectl get all -n ${{ vars.NAMESPACE }}
-                
+                echo "APP_INGRESS_HOST=$(kubectl -n ingress-nginx get svc ingress-nginx-controller -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')" >> "$GITHUB_OUTPUT"
+    integration-test:
+      name: Dev Integration Testing
+      needs: deploy-dev
+      runs-on: ubuntu-latest
+      steps:
+        - name: Test URL Output using Curl & JQ
+          env:
+            URL: ${{ needs.deploy-dev.outputs.APP_INGRESS_URL }}
+          run: |
+            echo $URL
+            echo "-------------------------------------"
+            curl http://$URL/live -s -k | jq -r .status | grep -i live   
             
