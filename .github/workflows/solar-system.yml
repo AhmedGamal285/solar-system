@@ -11,6 +11,10 @@ env:
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
   INGRESS_IP: 127.0.0.1
+  
+permissions: 
+            packages: write
+            contents: read
     
 jobs:
     unit-testing: 
@@ -129,6 +133,7 @@ jobs:
           outputs:
             APP_INGRESS_URL: ${{ steps.set-ingress-host-address.outputs.APP_INGRESS_HOST }}
           runs-on: ubuntu-latest
+          
           needs: [Containerization]
           steps:
             - name: Checkout Repository
