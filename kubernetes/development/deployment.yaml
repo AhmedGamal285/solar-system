@@ -6,6 +6,8 @@ metadata:
   name: solar-system
   namespace: _{_NAMESPACE_}_
 spec:
+  imagePullSecrets:
+        - name: ghcr-secret
   replicas: _{_REPLICAS_}_
   selector:
     matchLabels:
