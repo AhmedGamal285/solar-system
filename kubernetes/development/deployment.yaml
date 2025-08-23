@@ -6,8 +6,6 @@ metadata:
   name: solar-system
   namespace: _{_NAMESPACE_}_
 spec:
-  imagePullSecrets:
-        - name: ghcr-secret
   replicas: _{_REPLICAS_}_
   selector:
     matchLabels:
@@ -18,6 +16,8 @@ spec:
       labels:
         app: solar-system
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
       - image: _{_IMAGE_}_
         imagePullPolicy: Always
