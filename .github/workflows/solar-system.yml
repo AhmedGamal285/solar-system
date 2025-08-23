@@ -228,11 +228,9 @@ jobs:
                 kubectl get pod -n ${{ vars.NAMESPACE }}
                 echo "-------------------------------------"
                 kubectl wait --namespace ${{ vars.NAMESPACE }} \
-                  --for=condition=Running pod \
+                  --for=condition=Ready pod \
                   --selector=app=solar-system \
-                  --timeout=600s
-                echo "-------------------------------------"
-                kubectl get pod -n ${{ vars.NAMESPACE }}
+                  --timeout=120s
             
             - name: Test using Curl & JQ
               run: |
