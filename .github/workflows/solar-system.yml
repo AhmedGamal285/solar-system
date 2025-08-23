@@ -204,6 +204,9 @@ jobs:
             
             - name: Test using Curl & JQ
               run: |
+                kubectl get svc -n ${{ vars.NAMESPACE }}
+                echo "-------------------------------------"
+                kubectl get pod -n ${{ vars.NAMESPACE }}
                 echo "-------------------------------------"
                 curl http://localhost:30001/live -s -k | jq -r .status | grep -i live
 
