@@ -1,7 +1,7 @@
 pipeline {
     agent any
-    tools {
-        nodejs 'nodejs-22-21-1'
+    environment {
+        PATH = "${tool 'nodejs-22-21-1'}/bin:$PATH"
     }
 
     stages {
