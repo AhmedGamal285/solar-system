@@ -32,6 +32,8 @@ pipeline {
                         --prettyPrint
                         --format HTML
                         --out dependency-check-report.html''', odcInstallation: 'OWASP-DepCheck-v12'
+
+                        dependencyCheckPublisher failedTotalCritical: 1, failedTotalHigh: 2, failedTotalMedium: 0, pattern: 'dependency-check-report.xml', stopBuild: true, unstableTotalCritical: 0, unstableTotalHigh: 1
                     }
                 }
             }
