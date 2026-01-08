@@ -22,18 +22,25 @@ pipeline {
             parallel {
                 stage('NPM Dependencies Audit') {
                     steps {
-                        sh 'npm audit --audit-level=critical'
+                        sh '''
+                            npm audit --audit-level=critical
+                            echo $? > audit-result.txt
+                            '''
                     }
                 }
                 stage('OWASP Dependency-Check') {
                     steps {
                         dependencyCheck additionalArguments: '''
-                        --scan .
+                        --scan ./
                         --prettyPrint
-                        --format HTML
-                        --out dependency-check-report.html''', odcInstallation: 'OWASP-DepCheck-v12'
+                        --format ALL
+                        --out ./''', odcInstallation: 'OWASP-DepCheck-v12'
 
                         dependencyCheckPublisher failedTotalCritical: 1, failedTotalHigh: 2, failedTotalMedium: 0, pattern: 'dependency-check-report.xml', stopBuild: true, unstableTotalCritical: 0, unstableTotalHigh: 1
+
+                        junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
+
+                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-report.html', reportName: 'Dependency HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                     }
                 }
             }
