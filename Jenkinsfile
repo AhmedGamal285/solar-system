@@ -38,11 +38,21 @@ pipeline {
 
                         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
 
-                        junit allowEmptyResults: true, keepProperties: true, testResults: '**/dependency-check-junit.xml'
+                        // Archive dependency-check JUnit report; skip Checks API noise when no publisher is configured
+                        junit allowEmptyResults: true, keepProperties: true, keepLongStdio: true, skipPublishingChecks: true, testResults: '**/dependency-check-junit.xml'
 
                         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-report.html', reportName: 'Dependency HTML Report', reportTitles: '', useWrapperFileDirectly: true])
                     }
                 }
+            }
+        }
+        stage('Unit Tests') {
+            steps {
+                // Run mocha tests and emit JUnit XML via mocha-junit-reporter
+                sh 'npm test'
+
+                // Archive JUnit-formatted results so Jenkins can show them in the build
+                // junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
             }
         }
     }
