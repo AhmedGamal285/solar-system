@@ -3,6 +3,10 @@ pipeline {
     tools {
         nodejs 'nodejs-22-21-1'
     }
+    environment {
+        MONGO_URI = "mongodc+svc://supercluster.d83jj.mongodb.net/superData"
+    }
+
 
     stages {
         stage('Check Node and NPM Versions') {
@@ -48,11 +52,13 @@ pipeline {
         }
         stage('Unit Tests') {
             steps {
-                // Run mocha tests and emit JUnit XML via mocha-junit-reporter
-                sh 'npm test'
-
+                withCredentials([usernamePassword(credentialsId: '30a7abb1-429a-4880-a079-2ca81a6dcdfa', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    sh '''
+                        npm test
+                    '''
+                }
                 // Archive JUnit-formatted results so Jenkins can show them in the build
-                // junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
+                junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
             }
         }
     }
