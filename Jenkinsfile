@@ -71,15 +71,15 @@ pipeline {
                 catchError(buildResult: 'SUCCESS', message: 'Oops! It will be fixed next release', stageResult: 'UNSTABLE') {
                     sh '''
                         echo URL: $MONGO_URI
+                        echo "URL: ${MONGO_URI}"
                         echo username: $MONGO_DB_Cred_USR
+                        echo "username: ${MONGO_DB_Cred_USR}"
                         echo password: $MONGO_DB_Cred_PSW
                         echo creditional: $MONGO_DB_Cred
                         echo username: $MONGO_USERNAME
                         echo password: $MONGO_PASSWORD
                         npm run coverage
                     ''' }
-                // Publish code coverage HTML report
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
     }
