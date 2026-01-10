@@ -67,6 +67,7 @@ pipeline {
             }
         }
         stage('Code Coverage') {
+            name: 'Generate Code Coverage Report'
             steps {
                 catchError(buildResult: 'SUCCESS', message: 'Oops! It will be fixed next release', stageResult: 'UNSTABLE') {
                     sh '''
