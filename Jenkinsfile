@@ -4,9 +4,13 @@ pipeline {
         nodejs 'nodejs-22-21-1'
     }
     environment {
-        MONGO_URI = "mongodc+svc://supercluster.d83jj.mongodb.net/superData"
+        MONGO_URI = "mongodb+srv://cluster0.xw7opxs.mongodb.net/?appName=Cluster0"
     }
 
+    options {
+        disableConcurrentBuilds abortPrevious: true
+        disableResume()
+    }
 
     stages {
         stage('Check Node and NPM Versions') {
@@ -18,6 +22,9 @@ pipeline {
             }
         }
         stage('Install Dependencies') {
+            options {
+                timestamp()
+            }
             steps {
                 sh 'npm install --no-audit'
             }
@@ -51,14 +58,27 @@ pipeline {
             }
         }
         stage('Unit Tests') {
+            options {
+                retry(2)
+            }
             steps {
-                withCredentials([usernamePassword(credentialsId: '30a7abb1-429a-4880-a079-2ca81a6dcdfa', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                withCredentials([usernamePassword(credentialsId: 'mongo_cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     sh '''
                         npm test
                     '''
                 }
                 // Archive JUnit-formatted results so Jenkins can show them in the build
                 junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
+            }
+        }
+
+        stage('Code Coverage') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'mongo_cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    sh '''
+                        npm run coverage
+                    '''
+                }
             }
         }
     }
