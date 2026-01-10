@@ -4,7 +4,7 @@ pipeline {
         nodejs 'nodejs-22-21-1'
     }
     environment {
-        MONGO_URI = "mongodb+srv://cluster0.xw7opxs.mongodb.net/?appName=Cluster0"
+        MONGO_URI = "localhost:27017/testdb"
     }
 
     options {
@@ -71,7 +71,6 @@ pipeline {
                 junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
             }
         }
-
         stage('Code Coverage') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo_cred', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
