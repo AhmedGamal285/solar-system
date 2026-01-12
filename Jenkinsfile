@@ -8,6 +8,7 @@ pipeline {
         MONGO_DB_Cred = credentials('mongo_cred')
         MONGO_USERNAME = credentials('mongo-db-user')
         MONGO_PASSWORD = credentials('mongo-db-password')
+        scannerHome = tool 'sonarqube-8'
     }
 
     options {
@@ -83,7 +84,6 @@ pipeline {
             }
         }
         stage('SonarQube Scan - SAST') {
-            def scannerHome = tool 'sonarqube-8';
             steps {
                 sh '''
                     "${scannerHome}/bin/sonar-scanner" \
