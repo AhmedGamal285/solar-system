@@ -23,5 +23,17 @@ pipeline {
                 sh 'npm audit --audit-level=critical'
             }
         }
+        stage('SonarQube Scan - SAST') {
+            def scannerHome = tool 'sonarqube-8';
+            steps {
+                sh '''
+                    "${scannerHome}/bin/sonar-scanner" \
+                        -Dsonar.projectKey=AhmedGamal285_solar-system_85de6be7-3586-4481-9e68-9fa50893a563 \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://localhost:9000 \
+                        -Dsonar.login=sqp_5252c7140b0b567383f0051e4f6ffddadb04893a
+                '''
+            }
+        }
     }
 }
