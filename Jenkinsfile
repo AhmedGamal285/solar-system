@@ -6,8 +6,8 @@ pipeline {
     environment {
         MONGO_URI = "localhost:27017/testdb"
         MONGO_DB_Cred = credentials('mongo_cred')
-        // MONGO_USERNAME = credentials('mongo-db-user')
-        // MONGO_PASSWORD = credentials('mongo-db-password')
+        MONGO_USERNAME = credentials('mongo-db-user')
+        MONGO_PASSWORD = credentials('mongo-db-password')
         scannerHome = tool 'sonarqube-8'
     }
 
@@ -91,6 +91,7 @@ pipeline {
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://localhost:9000 \
                         -Dsonar.login=sqp_5252c7140b0b567383f0051e4f6ffddadb04893a
+                        -Dsonar.javascript.lcov.reportPaths=coverage/lcov.info
                 '''
             }
         }
