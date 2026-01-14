@@ -97,13 +97,15 @@ pipeline {
     }
     post {
         always {
-           // Archive dependency-check JUnit report; skip Checks API noise when no publisher is configured
-            junit allowEmptyResults: true, keepProperties: true, keepLongStdio: true, skipPublishingChecks: true, testResults: '**/dependency-check-junit.xml'
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-report.html', reportName: 'Dependency HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-            // Archive JUnit-formatted results so Jenkins can show them in the build
-            junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
-            // Publish code coverage HTML report
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+            node('') {
+                // Archive dependency-check JUnit report; skip Checks API noise when no publisher is configured
+                junit allowEmptyResults: true, keepProperties: true, keepLongStdio: true, skipPublishingChecks: true, testResults: '**/dependency-check-junit.xml'
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-report.html', reportName: 'Dependency HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                // Archive JUnit-formatted results so Jenkins can show them in the build
+                junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
+                // Publish code coverage HTML report
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+            }
         }
     }
 }
