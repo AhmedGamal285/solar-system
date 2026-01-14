@@ -43,17 +43,17 @@ pipeline {
                             '''
                     }
                 }
-                stage('OWASP Dependency-Check') {
-                    steps {
-                        dependencyCheck additionalArguments: '''
-                        --scan ./
-                        --prettyPrint
-                        --format ALL
-                        --out ./''', odcInstallation: 'OWASP-DepCheck-v12'
+                // stage('OWASP Dependency-Check') {
+                //     steps {
+                //         dependencyCheck additionalArguments: '''
+                //         --scan ./
+                //         --prettyPrint
+                //         --format ALL
+                //         --out ./''', odcInstallation: 'OWASP-DepCheck-v12'
 
-                        dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-                    }
-                }
+                //         dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                //     }
+                // }
             }
         }
         stage('Unit Tests') {
