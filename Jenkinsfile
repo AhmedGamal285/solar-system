@@ -98,6 +98,14 @@ pipeline {
                 }
             }
         }
+        stage('Build Docker Image') {
+            steps {
+                sh '''
+                    printenv
+                    docker build -t solar-system-app:$GIT_COMMIT .
+                '''
+            }
+        }
     }
     post {
         always {
