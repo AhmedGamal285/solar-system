@@ -106,6 +106,31 @@ pipeline {
                 '''
             }
         }
+        stage('Trivy Scan Docker Image') {
+            steps {
+                sh '''
+                    trivy image --severity CRITICAL --exit-code 1 solar-system-app:$GIT_COMMIT --format json -o critical-report.json || echo "No Critical vulnerabilities found"
+                    trivy image --severity LOW,MEDIUM,HIGH --exit-code 0 solar-system-app:$GIT_COMMIT --format json -o high-report.json || echo "No High vulnerabilities found"
+                '''
+            }
+            post {
+                always {
+                    sh '''
+                    trivy convert --input critical-report.json --output trivy-critical-report.html --format template --template "@contrib/html.tpl" || echo "No Critical vulnerabilities found"
+                    trivy convert --input high-report.json --output trivy-high-report.html --format template --template "@contrib/html.tpl" || echo "No High vulnerabilities found"
+                    '''
+                }
+            }
+        }
+        stage('Push Docker Image') {
+            steps {
+                withDockerRegistry(credentialsId: 'docker-hub-cred', url: "") {
+                    sh '''
+                        docker push solar-system-app:$GIT_COMMIT
+                    '''
+                }
+            }
+        }
     }
     post {
         always {
@@ -117,6 +142,9 @@ pipeline {
                 junit allowEmptyResults: true, keepLongStdio: true, testResults: '**/test-results.xml'
                 // Publish code coverage HTML report
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+                 // Publish Trivy HTML reports
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-critical-report.html', reportName: 'Trivy Critical Vulnerabilities Report', reportTitles: '', useWrapperFileDirectly: true])
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-high-report.html', reportName: 'Trivy High Vulnerabilities Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
     }
